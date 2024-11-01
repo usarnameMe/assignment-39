@@ -1,25 +1,21 @@
+# note/serializers.py
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from NoteApp.note.models import Note
-from .models import Post
+from .models import Note, Post
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = [
-            "id", "username", "email"
-        ]
+        fields = ['id', 'username']
 
 
 class NoteSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user = serializers.ReadOnlyField(source='user.username')
 
     class Meta:
         model = Note
-        fields = [
-            "id", "title", "body", "user", "slug"
-        ]
+        fields = ['id', 'title', 'body', 'slug', 'user']
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -27,4 +23,4 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'owner', 'title', 'body', 'created_at', 'updated_at']
+        fields = ["id", "owner", "title", "body", "created_at", "updated_at"]
